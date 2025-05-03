@@ -2,7 +2,15 @@
 
 import { cookies } from "next/headers";
 
-export async function storeJwt(output) {
+type Output = {
+  status: number;
+  data: {
+    accessToken: string;
+    message: string;
+  };
+};
+
+export async function storeJwt(output: Output) {
   const cookieStore = await cookies();
   if (output?.status === 400) {
     return { status: "failure", message: output?.data.message };
@@ -19,4 +27,9 @@ export async function storeJwt(output) {
 export async function getToken() {
   const cookieStore = await cookies();
   return cookieStore.get("token")?.value;
+}
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete("token");
 }

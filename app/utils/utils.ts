@@ -1,25 +1,21 @@
 import { redirect } from "next/navigation";
-import { getToken } from "./jwtStore";
+import { getToken, logout, storeJwt } from "./jwtStore";
 
-export default async function requestInterceptor(url, input, method) {
+export async function requestInterceptor(
+  url: string,
+  input: unknown,
+  method: string
+) {
   let redirectPath = "";
   try {
     const BASEURL = "http://localhost:9000";
 
-    let headers;
-    if (url === "login") {
-      headers = {
-        "Content-Type": "application/json",
-      };
-    } else {
-      headers = {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + (await getToken()),
-      };
-    }
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + (await getToken()),
+    };
 
     let response;
-
     if (method === "POST" || method === "PUT") {
       response = await fetch(BASEURL + "/" + url, {
         method: method,
@@ -36,6 +32,7 @@ export default async function requestInterceptor(url, input, method) {
     const status = response.status;
     const data = await response.json();
     if (status === 401) {
+      logout();
       redirectPath = "/login";
     }
     // console.log(status);
@@ -44,6 +41,61 @@ export default async function requestInterceptor(url, input, method) {
   } catch (error) {
     console.log(error);
   } finally {
+    if (redirectPath !== "") {
+      redirect(redirectPath);
+    }
+  }
+}
+
+export async function loginRequestInterceptor(input: unknown) {
+  let redirectPath = "";
+  try {
+    const BASEURL = "http://localhost:9000";
+
+    const response = await fetch(BASEURL + "/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input),
+    });
+
+    const status = response.status;
+    if (status === 200) {
+      const data = await response.json();
+      const message = await storeJwt({ status, data });
+      if (message.status === 200) {
+        redirectPath = "/dashboard";
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    if (redirectPath !== "") redirect(redirectPath);
+  }
+}
+
+export async function checkIfJwtValid() {
+  let redirectPath = "";
+  try {
+    const token = await getToken();
+    if (token !== undefined) {
+      const output = await requestInterceptor(
+        "login/checkIfJwtValid",
+        "",
+        "POST"
+      );
+      if (output?.status === 200) {
+        redirectPath = "/dashboard";
+      }
+    } else {
+      redirectPath = "/login";
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    // const path = window.location.pathname;
+    // if (redirectPath !== "" && !path.includes(redirectPath)) {
     if (redirectPath !== "") {
       redirect(redirectPath);
     }

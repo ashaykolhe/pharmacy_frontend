@@ -1,22 +1,35 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import requestInterceptor from "../utils/utils";
+import { checkIfJwtValid, requestInterceptor } from "../utils/utils";
+
+type Product = {
+  id: string;
+  name: string;
+  genericName: string;
+  productType: {
+    name: string;
+  };
+};
 
 const Dashboard = () => {
-  // const output = await requestInterceptor("api/product/v1/findAll", "", "GET");
   const [text, setText] = useState("");
-  const [output, setOutput] = useState();
+  const [output, setOutput] = useState([]);
   useEffect(() => {
-    console.log("Use effect");
+    checkIfJwtValid();
+  }, []);
+
+  useEffect(() => {
     async function fullTextSearch() {
-      const o = await requestInterceptor(
-        `api/product/v1/fullTextSearch/${text}`,
-        "",
-        "GET"
-      );
-      setOutput(o?.data);
-      console.log(o?.data);
+      if (text !== "") {
+        const o = await requestInterceptor(
+          `api/product/v1/fullTextSearch/${text}`,
+          "",
+          "GET"
+        );
+        setOutput(o?.data);
+        // console.log(o?.data);
+      }
     }
     fullTextSearch();
   }, [text]);
@@ -39,7 +52,7 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {output?.map((product) => (
+          {output.map((product: Product) => (
             <tr key={product.id}>
               <td>{product.name}</td>
               <td>{product.genericName}</td>

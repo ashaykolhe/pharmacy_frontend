@@ -1,28 +1,24 @@
 "use client";
 
-import React, { FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import requestInterceptor from "@/app/utils/utils";
-import { storeJwt } from "@/app/utils/jwtStore";
+import React, { FormEvent, useEffect } from "react";
+import { loginRequestInterceptor, checkIfJwtValid } from "@/app/utils/utils";
 
 const Login = () => {
-  const router = useRouter();
+  useEffect(() => {
+    checkIfJwtValid();
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username");
     const password = formData.get("password");
-    const input = {
+    const input: unknown = {
       username: username,
       password: password,
     };
 
-    const output = await requestInterceptor("login", input, "POST");
-    const message = await storeJwt(output);
-    if (message.status === 200) {
-      router.push("/dashboard");
-    }
+    loginRequestInterceptor(input);
   };
 
   return (

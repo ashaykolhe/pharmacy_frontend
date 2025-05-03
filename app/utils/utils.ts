@@ -40,7 +40,7 @@ export default async function requestInterceptor(url, input, method) {
     }
     // console.log(status);
     // console.log(data);
-    return { status, data };
+    return { status: status, data: data };
   } catch (error) {
     console.log(error);
   } finally {

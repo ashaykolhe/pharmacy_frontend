@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { checkIfJwtValid, requestInterceptor } from "../utils/utils";
+import JwtExpiryDialog from "../components/JwtExpiryDialog";
 
 type Product = {
   id: string;
@@ -15,8 +16,9 @@ type Product = {
 const Dashboard = () => {
   const [text, setText] = useState("");
   const [output, setOutput] = useState([]);
+
   useEffect(() => {
-    checkIfJwtValid();
+    checkIfJwtValid("dashboard");
   }, []);
 
   useEffect(() => {
@@ -36,6 +38,7 @@ const Dashboard = () => {
 
   return (
     <div>
+      <JwtExpiryDialog />
       Search
       <input
         type="text"

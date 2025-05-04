@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 import { getToken, logout, storeJwt } from "./jwtStore";
+import { jwtDecode } from "jwt-decode";
 
 export async function requestInterceptor(
   url: string,
   input: unknown,
   method: string
 ) {
-  let redirectPath = "";
   try {
     const BASEURL = "http://localhost:9000";
 
@@ -33,17 +33,12 @@ export async function requestInterceptor(
     const data = await response.json();
     if (status === 401) {
       logout();
-      redirectPath = "/login";
     }
     // console.log(status);
     // console.log(data);
     return { status: status, data: data };
   } catch (error) {
     console.log(error);
-  } finally {
-    if (redirectPath !== "") {
-      redirect(redirectPath);
-    }
   }
 }
 
@@ -52,7 +47,7 @@ export async function loginRequestInterceptor(input: unknown) {
   try {
     const BASEURL = "http://localhost:9000";
 
-    const response = await fetch(BASEURL + "/login", {
+    const response = await fetch(BASEURL + "/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,20 +70,20 @@ export async function loginRequestInterceptor(input: unknown) {
   }
 }
 
-export async function checkIfJwtValid() {
+export async function checkIfJwtValid(path: string) {
   let redirectPath = "";
   try {
     const token = await getToken();
     if (token !== undefined) {
       const output = await requestInterceptor(
-        "login/checkIfJwtValid",
+        "auth/checkIfJwtValid",
         "",
         "POST"
       );
-      if (output?.status === 200) {
+      if (output?.status === 200 && !path.includes("dashboard")) {
         redirectPath = "/dashboard";
       }
-    } else {
+    } else if (!path.includes("login")) {
       redirectPath = "/login";
     }
   } catch (error) {
@@ -96,8 +91,20 @@ export async function checkIfJwtValid() {
   } finally {
     // const path = window.location.pathname;
     // if (redirectPath !== "" && !path.includes(redirectPath)) {
+    // console.log(redirectPath);
     if (redirectPath !== "") {
       redirect(redirectPath);
     }
   }
 }
+
+export const isTokenExpiring = (token, dialogOpenStartTime = 20) => {
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Math.floor(Date.now() / 1000);
+    return decodedToken.exp - currentTime < dialogOpenStartTime;
+  } catch (error) {
+    // Handle invalid token or other errors
+    return false;
+  }
+};

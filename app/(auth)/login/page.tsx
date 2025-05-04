@@ -1,13 +1,9 @@
 "use client";
 
+import { checkIfJwtValid, loginRequestInterceptor } from "@/app/utils/utils";
 import React, { FormEvent, useEffect } from "react";
-import { loginRequestInterceptor, checkIfJwtValid } from "@/app/utils/utils";
 
 const Login = () => {
-  useEffect(() => {
-    checkIfJwtValid();
-  }, []);
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -20,6 +16,10 @@ const Login = () => {
 
     loginRequestInterceptor(input);
   };
+
+  useEffect(() => {
+    checkIfJwtValid("login");
+  }, []);
 
   return (
     <div>

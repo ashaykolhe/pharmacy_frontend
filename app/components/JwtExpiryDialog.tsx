@@ -15,7 +15,7 @@ import { isTokenExpiring, requestInterceptor } from "../utils/utils";
 import { getToken, logout, storeJwt } from "../utils/jwtStore";
 import Timer from "easytimer.js";
 var timerJs = new Timer();
-const timerEx = 10;
+const timerEx = 30;
 const JwtExpiryDialog = () => {
   const handleCloseDialog = () => {
     timerJs.stop();
@@ -68,17 +68,19 @@ const JwtExpiryDialog = () => {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
-                You are about to be logged out. {t}
+                You are about to be logged out in {t} seconds
               </AlertDialogTitle>
               <AlertDialogDescription>
                 Press Continue to extend session or else logout
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={handleCloseDialog}>
+              <AlertDialogCancel className="submit" onClick={handleCloseDialog}>
                 Logout
               </AlertDialogCancel>
-              <AlertDialogAction onClick={renewJwt}>Continue</AlertDialogAction>
+              <AlertDialogAction className="submit" onClick={renewJwt}>
+                Continue
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

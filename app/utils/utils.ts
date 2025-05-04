@@ -56,12 +56,14 @@ export async function loginRequestInterceptor(input: unknown) {
     });
 
     const status = response.status;
+    const data = await response.json();
     if (status === 200) {
-      const data = await response.json();
       const message = await storeJwt({ status, data });
       if (message.status === 200) {
         redirectPath = "/dashboard";
       }
+    } else if (status === 400) {
+      return { data };
     }
   } catch (error) {
     console.log(error);

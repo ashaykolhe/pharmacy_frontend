@@ -12,10 +12,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { isTokenExpiring, requestInterceptor } from "../utils/utils";
-import { getToken, logout, storeJwt } from "../utils/jwtStore";
+import { deleteToken, getToken, logout, storeJwt } from "../utils/jwtStore";
 import Timer from "easytimer.js";
 var timerJs = new Timer();
-const timerEx = 30;
+var timerMain = new Timer();
+const timerEx = 10;
 const JwtExpiryDialog = () => {
   const handleCloseDialog = () => {
     timerJs.stop();
@@ -25,40 +26,70 @@ const JwtExpiryDialog = () => {
   };
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [t, setT] = useState(timerEx);
-  const [token, setToken] = useState();
+  const [tokenState, setTokenState] = useState(null);
   useEffect(() => {
-    async function a() {
-      const token = await getToken();
-      if (token) {
-        const intervalId = setInterval(() => {
-          if (isTokenExpiring(token)) {
-            setIsDialogOpen(true);
-            if (!timerJs.isRunning()) {
-              timerJs.start({
-                countdown: true,
-                startValues: { seconds: timerEx },
-              });
-              timerJs.addEventListener("secondsUpdated", function (e) {
-                setT(timerJs.getTimeValues().seconds);
-              });
-              timerJs.addEventListener("targetAchieved", handleCloseDialog);
-            }
-
-            clearInterval(intervalId); // Stop checking once the dialog is shown
-          }
-        }, 10000); // Check every 10 seconds
-      }
-    }
     a();
-  }, [token]);
+  }, []);
+
+  function a() {
+    // const token = await getToken();
+    // const localtoken = localStorage.getItem("token");
+    // localtoken
+    // if (token) {
+    // const intervalId = setInterval(() => {
+    //   console.log("setinterval");
+    //   if (isTokenExpiring(token, timerEx)) {
+    //     console.log("expiring");
+    //     setIsDialogOpen(true);
+    //     if (!timerJs.isRunning()) {
+    //       timerJs.start({
+    //         countdown: true,
+    //         startValues: { seconds: timerEx },
+    //       });
+    //       timerJs.addEventListener("secondsUpdated", function (e) {
+    //         setT(timerJs.getTimeValues().seconds);
+    //       });
+    //       timerJs.addEventListener("targetAchieved", handleCloseDialog);
+    //     }
+    //     clearInterval(intervalId);
+    //   }
+    // }, 1000); // Check every 10 seconds
+    if (!timerMain.isRunning()) {
+      timerMain.start();
+      timerMain.addEventListener("secondsUpdated", function (e) {
+        // console.log("timer started");
+        // console.log(token);
+        if (isTokenExpiring(localStorage.getItem("token"), timerEx)) {
+          // console.log("expiring");
+          setIsDialogOpen(true);
+          if (!timerJs.isRunning()) {
+            timerJs.start({
+              countdown: true,
+              startValues: { seconds: timerEx },
+            });
+            timerJs.addEventListener("secondsUpdated", function (e) {
+              setT(timerJs.getTimeValues().seconds);
+            });
+            timerJs.addEventListener("targetAchieved", handleCloseDialog);
+          }
+          timerMain.stop();
+        }
+      });
+    }
+    // }
+  }
 
   async function renewJwt() {
     timerJs.stop();
     setIsDialogOpen(false);
     setT(timerEx);
-    const renewJwt = await requestInterceptor("auth/renewJwt", "", "POST");
-    storeJwt(renewJwt);
-    setToken(renewJwt?.data.accessToken);
+    const renewJwts = await requestInterceptor("auth/renewJwt", "", "POST");
+    if (renewJwts) {
+      storeJwt(renewJwts);
+      // const token = await getToken();
+      // setTokenState(renewJwts.data.accessToken);
+      a();
+    }
   }
 
   return (

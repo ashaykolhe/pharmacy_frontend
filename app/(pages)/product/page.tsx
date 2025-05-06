@@ -1,18 +1,13 @@
 "use client";
-import JwtExpiryDialog from "@/app/components/JwtExpiryDialog";
+
 import { checkIfJwtValid } from "@/app/utils/utils";
 import React, { useEffect } from "react";
 
 const Product = () => {
   useEffect(() => {
-    checkIfJwtValid("dashboard");
+    checkIfJwtValid("/product");
   }, []);
-  return (
-    <div>
-      {/* <JwtExpiryDialog /> */}
-      Product
-    </div>
-  );
+  return <div>Product</div>;
 };
 
 export default Product;

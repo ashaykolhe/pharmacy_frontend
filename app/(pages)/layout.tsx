@@ -15,7 +15,7 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { logout } from "../utils/jwtStore";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import JwtExpiryDialog from "../components/JwtExpiryDialog";
@@ -25,26 +25,59 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const keys = {};
-  useEffect(() => {
-    window.addEventListener("keydown", (event) => {
-      event.preventDefault();
-      keys[event.key] = true;
-    });
+  type StringKeyObject = {
+    [key: string]: boolean;
+  };
 
-    window.addEventListener("keyup", (event) => {
-      if (keys["Control"] && keys["p"] && keys["a"]) {
+  const keys: StringKeyObject = {};
+  //   const router = useRouter();
+
+  function keyDown(event: KeyboardEvent) {
+    event.preventDefault();
+    // event.stopPropagation();
+    keys[event.key] = true;
+  }
+
+  function keyUp(event: KeyboardEvent) {
+    console.log("before");
+    console.log(keys);
+    if (keys["Alt"]) {
+      if (keys["p"] && keys["a"]) {
+        // event.preventDefault();
+        //   router.push("/product/add");d
+        console.log("alt p a");
+        keys[event.key] = false;
         redirect("/product/add");
-      } else if (keys["Control"] && keys["p"]) {
-        redirect("/product");
-      } else if (keys["Control"] && keys["d"]) {
+      } else if (keys["d"]) {
+        //   router.push("/dashboard");
+        console.log("alt d");
+        keys[event.key] = false;
         redirect("/dashboard");
+      } else if (keys["p"]) {
+        //   router.push("/product");
+        console.log("alt p");
+        keys[event.key] = false;
+        redirect("/product");
+      } else {
+        console.log("No alt shortcut available");
       }
-      keys[event.key] = false;
-    });
+    } else {
+      console.log("No shortcut available");
+    }
+
+    keys[event.key] = false;
+    // keys = {};
+    console.log("after");
+    console.log(keys);
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", keyDown);
+    document.addEventListener("keyup", keyUp);
     return () => {
-      window.removeEventListener("keydown", () => {});
-      window.removeEventListener("keyup", () => {});
+      console.log("cleanup");
+      document.removeEventListener("keydown", keyDown);
+      document.removeEventListener("keyup", keyUp);
     };
   }, [keys]);
 
@@ -56,6 +89,7 @@ export default function Layout({
           <MenubarMenu>
             <MenubarTrigger>
               <Link href="/dashboard">Dashboard</Link>
+              &nbsp;<MenubarShortcut>Alt d</MenubarShortcut>
             </MenubarTrigger>
           </MenubarMenu>
           <MenubarMenu>
@@ -65,7 +99,7 @@ export default function Layout({
             <MenubarContent>
               <MenubarItem>
                 <Link href="/product/add">Add Product</Link>{" "}
-                <MenubarShortcut>Alt p m</MenubarShortcut>
+                <MenubarShortcut>Alt p a</MenubarShortcut>
               </MenubarItem>
               <MenubarItem>
                 Update <MenubarShortcut>Alt p u</MenubarShortcut>

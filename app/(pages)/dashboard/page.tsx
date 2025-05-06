@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { checkIfJwtValid, requestInterceptor } from "../../utils/utils";
-import JwtExpiryDialog from "@/app/components/JwtExpiryDialog";
 
 type Product = {
   id: string;
@@ -38,7 +37,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* <JwtExpiryDialog /> */}
       Search
       <input
         type="text"

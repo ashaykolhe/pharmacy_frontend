@@ -9,13 +9,12 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { isTokenExpiring, requestInterceptor } from "../utils/utils";
-import { deleteToken, getToken, logout, storeJwt } from "../utils/jwtStore";
+import { logout, storeJwt } from "../utils/jwtStore";
 import Timer from "easytimer.js";
-var timerJs = new Timer();
-var timerMain = new Timer();
+const timerJs = new Timer();
+const timerMain = new Timer();
 const timerEx = 10;
 const JwtExpiryDialog = () => {
   const handleCloseDialog = () => {
@@ -26,7 +25,7 @@ const JwtExpiryDialog = () => {
   };
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [t, setT] = useState(timerEx);
-  const [tokenState, setTokenState] = useState(null);
+  // const [tokenState, setTokenState] = useState(null);
   useEffect(() => {
     a();
   }, []);
@@ -56,7 +55,7 @@ const JwtExpiryDialog = () => {
     // }, 1000); // Check every 10 seconds
     if (!timerMain.isRunning()) {
       timerMain.start();
-      timerMain.addEventListener("secondsUpdated", function (e) {
+      timerMain.addEventListener("secondsUpdated", function () {
         // console.log("timer started");
         // console.log(token);
         if (isTokenExpiring(localStorage.getItem("token"), timerEx)) {
@@ -67,7 +66,7 @@ const JwtExpiryDialog = () => {
               countdown: true,
               startValues: { seconds: timerEx },
             });
-            timerJs.addEventListener("secondsUpdated", function (e) {
+            timerJs.addEventListener("secondsUpdated", function () {
               setT(timerJs.getTimeValues().seconds);
             });
             timerJs.addEventListener("targetAchieved", handleCloseDialog);

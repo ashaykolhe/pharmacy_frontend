@@ -29,13 +29,14 @@ export function storeJwt(output: Output) {
 }
 
 export async function getToken() {
-  const cookieStore = await cookies();
-  return cookieStore.get("token")?.value;
+  // const cookieStore = await cookies();
+  // return cookieStore.get("token")?.value;
 }
 
 export async function logout() {
   // const cookieStore = await cookies();
   // cookieStore.delete("token");
   localStorage.removeItem("token");
+  console.log("logging out");
   redirect("/login");
 }

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
-import { getToken, logout, storeJwt } from "./jwtStore";
+
 import { jwtDecode } from "jwt-decode";
+import { logout, storeJwt } from "./jwtStore";
 
 export async function requestInterceptor(
   url: string,
@@ -39,7 +40,7 @@ export async function requestInterceptor(
     // console.log(data);
     return { status: status, data: data };
   } catch (error) {
-    console.log(error);
+    console.log("requestInterceptor " + error);
   }
 }
 
@@ -67,55 +68,69 @@ export async function loginRequestInterceptor(input: unknown) {
       return { data };
     }
   } catch (error) {
-    console.log(error);
+    console.log("loginRequestInterceptor " + error);
   } finally {
     if (redirectPath !== "") redirect(redirectPath);
   }
 }
 
 export async function checkIfJwtValid(path: string) {
-  // let redirectPath = "";
-  // try {
-  //   const token = await getToken();
-  //   if (token !== undefined) {
-  //     // const output = await requestInterceptor(
-  //     //   "auth/checkIfJwtValid",
-  //     //   "",
-  //     //   "POST"
-  //     // );
-  //     if (isTokenExpiring(token, 0)) {
-  //       redirectPath = "/login";
-  //     } else {
-  //       redirectPath = window.location.pathname;
-  //     }
-  //     // if (output?.status === 200 && !path.includes("dashboard")) {
-  //     //   redirectPath = "/dashboard";
-  //     // }
-  //     // } else if (!path.includes("login")) {
-  //   } else {
-  //     redirectPath = "/login";
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // } finally {
-  //   // const path = window.location.pathname;
-  //   // if (redirectPath !== "" && !path.includes(redirectPath)) {
-  //   // console.log(redirectPath);
-  //   if (redirectPath !== "") {
-  //     redirect(redirectPath);
-  //   }
-  // }
+  let redirectPath = "";
+  try {
+    // const token = await getToken();
+    const token = localStorage.getItem("token");
+    // console.log(token);
+    if (token !== null) {
+      // console.log(token);
+      // const output = await requestInterceptor(
+      //   "auth/checkIfJwtValid",
+      //   "",
+      //   "POST"
+      // );
+      const expired = isTokenExpiring(token, 0);
+      if (expired) {
+        // redirectPath = "/login";
+        logout();
+      } else if (!expired && path === "login") {
+        redirectPath = "/dashboard";
+      }
+      // if (output?.status === 200 && !path.includes("dashboard")) {
+      //   redirectPath = "/dashboard";
+      // }
+      // } else if (!path.includes("login")) {
+    } else {
+      logout();
+    }
+  } catch (error) {
+    console.log("checkIfJwtValid " + error);
+  } finally {
+    // const path = window.location.pathname;
+    // if (redirectPath !== "" && !path.includes(redirectPath)) {
+    // console.log(redirectPath);
+    if (redirectPath !== "") {
+      redirect(redirectPath);
+    }
+  }
 }
 
-export const isTokenExpiring = (token, dialogOpenStartTime) => {
+export const isTokenExpiring = (
+  token: string | null,
+  dialogOpenStartTime: number
+) => {
   try {
-    const decodedToken = jwtDecode(token);
-    const currentTime = Math.floor(Date.now() / 1000);
-    // console.log(decodedToken.exp - currentTime);
-    // console.log(decodedToken.exp - currentTime < dialogOpenStartTime);
-    return decodedToken.exp - currentTime < dialogOpenStartTime;
+    if (token !== null) {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Math.floor(Date.now() / 1000);
+      // console.log(decodedToken.exp - currentTime);
+      // console.log(decodedToken.exp - currentTime < dialogOpenStartTime);
+      if (decodedToken.exp !== undefined) {
+        return decodedToken.exp - currentTime < dialogOpenStartTime;
+      }
+    }
+    return false;
   } catch (error) {
     // Handle invalid token or other errors
+    console.log("isTokenExpiring " + error);
     return false;
   }
 };

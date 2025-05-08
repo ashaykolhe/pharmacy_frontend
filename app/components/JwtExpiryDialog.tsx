@@ -28,38 +28,23 @@ const JwtExpiryDialog = () => {
   // const [tokenState, setTokenState] = useState(null);
   useEffect(() => {
     a();
+    return () => {
+      console.log("JwtExpiryDialog cleanup");
+      timerJs.stop();
+      timerMain.stop();
+      timerJs.removeAllEventListeners();
+      timerMain.removeAllEventListeners();
+    };
   }, []);
 
   function a() {
-    // const token = await getToken();
-    // const localtoken = localStorage.getItem("token");
-    // localtoken
-    // if (token) {
-    // const intervalId = setInterval(() => {
-    //   console.log("setinterval");
-    //   if (isTokenExpiring(token, timerEx)) {
-    //     console.log("expiring");
-    //     setIsDialogOpen(true);
-    //     if (!timerJs.isRunning()) {
-    //       timerJs.start({
-    //         countdown: true,
-    //         startValues: { seconds: timerEx },
-    //       });
-    //       timerJs.addEventListener("secondsUpdated", function (e) {
-    //         setT(timerJs.getTimeValues().seconds);
-    //       });
-    //       timerJs.addEventListener("targetAchieved", handleCloseDialog);
-    //     }
-    //     clearInterval(intervalId);
-    //   }
-    // }, 1000); // Check every 10 seconds
     if (!timerMain.isRunning()) {
       timerMain.start();
       timerMain.addEventListener("secondsUpdated", function () {
-        // console.log("timer started");
+        // console.log("timerMain started " + timerMain.getTimeValues().seconds);
         // console.log(token);
         if (isTokenExpiring(localStorage.getItem("token"), timerEx)) {
-          // console.log("expiring");
+          console.log("expiring");
           setIsDialogOpen(true);
           if (!timerJs.isRunning()) {
             timerJs.start({
@@ -67,6 +52,7 @@ const JwtExpiryDialog = () => {
               startValues: { seconds: timerEx },
             });
             timerJs.addEventListener("secondsUpdated", function () {
+              // console.log("timerJs started " + timerJs.getTimeValues().seconds);
               setT(timerJs.getTimeValues().seconds);
             });
             timerJs.addEventListener("targetAchieved", handleCloseDialog);

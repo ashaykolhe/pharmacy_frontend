@@ -62,7 +62,7 @@ export async function loginRequestInterceptor(input: unknown) {
     if (status === 200) {
       const message = storeJwt({ status, data });
       if (message.status === 200) {
-        redirectPath = "/dashboard";
+        redirectPath = "/home";
       }
     } else if (status === 400) {
       return { data };
@@ -77,27 +77,16 @@ export async function loginRequestInterceptor(input: unknown) {
 export async function checkIfJwtValid(path: string) {
   let redirectPath = "";
   try {
-    // const token = await getToken();
     const token = localStorage.getItem("token");
-    // console.log(token);
+    // console.log("checkIfJwtValid " + token);
     if (token !== null) {
       // console.log(token);
-      // const output = await requestInterceptor(
-      //   "auth/checkIfJwtValid",
-      //   "",
-      //   "POST"
-      // );
       const expired = isTokenExpiring(token, 0);
       if (expired) {
-        // redirectPath = "/login";
         logout();
       } else if (!expired && path === "login") {
-        redirectPath = "/dashboard";
+        redirectPath = "/home";
       }
-      // if (output?.status === 200 && !path.includes("dashboard")) {
-      //   redirectPath = "/dashboard";
-      // }
-      // } else if (!path.includes("login")) {
     } else {
       logout();
     }

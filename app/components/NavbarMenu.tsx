@@ -32,19 +32,16 @@ const NavbarMenu = () => {
           <MenubarTrigger>Dashboard</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
-              <Link href="/dashboard/god">
-                God&nbsp;<MenubarShortcut>Alt Shift D G</MenubarShortcut>
-              </Link>
+              <Link href="/dashboard/god">God</Link>
+              <MenubarShortcut>Alt Shift D G</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
-              <Link href="/dashboard/admin">
-                Admin&nbsp;<MenubarShortcut>Alt Shift D A</MenubarShortcut>
-              </Link>
+              <Link href="/dashboard/admin">Admin</Link>
+              <MenubarShortcut>Alt Shift D A</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
-              <Link href="/dashboard/user">
-                User&nbsp;<MenubarShortcut>Alt Shift D U</MenubarShortcut>
-              </Link>
+              <Link href="/dashboard/user">User</Link>
+              <MenubarShortcut>Alt Shift D U</MenubarShortcut>
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
@@ -52,13 +49,12 @@ const NavbarMenu = () => {
           <MenubarTrigger>Employee</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
-              <Link href="/employee">
-                View&nbsp;<MenubarShortcut>Alt Shift E</MenubarShortcut>
-              </Link>
+              <Link href="/employee">View</Link>
+              <MenubarShortcut>Alt Shift E</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               <Link href="/employee/add">Add</Link>
-              &nbsp;<MenubarShortcut>Alt Shift E A</MenubarShortcut>
+              <MenubarShortcut>Alt Shift E A</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               Update
@@ -71,10 +67,11 @@ const NavbarMenu = () => {
           <MenubarContent>
             <MenubarItem>
               <Link href="/product">View</Link>
+              <MenubarShortcut>Alt Shift P</MenubarShortcut>
             </MenubarItem>
             <MenubarItem>
               <Link href="/product/add">Add</Link>
-              {/* <MenubarShortcut>Alt p a</MenubarShortcut> */}
+              {/* &nbsp;<MenubarShortcut>Alt p a</MenubarShortcut> */}
             </MenubarItem>
             <MenubarItem>
               Update
@@ -84,7 +81,7 @@ const NavbarMenu = () => {
         </MenubarMenu>
         <MenubarMenu>
           <MenubarTrigger className="cursor-pointer" onClick={() => logout()}>
-            Logout
+            Logout&nbsp;
             <MenubarShortcut>Alt Shift L</MenubarShortcut>
           </MenubarTrigger>
         </MenubarMenu>

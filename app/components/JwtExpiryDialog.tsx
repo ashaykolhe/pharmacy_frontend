@@ -81,7 +81,7 @@ const JwtExpiryDialog = () => {
     <div>
       {isDialogOpen && (
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <AlertDialogContent>
+          <AlertDialogContent onEscapeKeyDown={(e) => e.preventDefault()}>
             <AlertDialogHeader>
               <AlertDialogTitle>
                 You are about to be logged out in {t} seconds

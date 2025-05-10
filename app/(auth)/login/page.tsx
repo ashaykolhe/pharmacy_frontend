@@ -1,6 +1,7 @@
 "use client";
 
 import { checkIfJwtValid, loginRequestInterceptor } from "@/app/utils/utils";
+import { GlowEffect } from "@/components/motion-primitives/glow-effect";
 import React, { FormEvent, useEffect, useState } from "react";
 
 const Login = () => {
@@ -18,7 +19,7 @@ const Login = () => {
     };
 
     const data = await loginRequestInterceptor(input);
-    console.log(data?.data.message);
+    // console.log(data?.data.message);
     setError(data?.data.message);
   };
 
@@ -32,8 +33,18 @@ const Login = () => {
 
   return (
     <section className="grid min-h-screen place-items-center p-16">
-      <div className="w-72 rounded-md p-4 pt-0 shadow-lg">
-        <form className="grid gap-3" onSubmit={handleSubmit}>
+      <div className="relative p-4">
+        <GlowEffect
+          colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
+          mode="colorShift"
+          blur="soft"
+          duration={3}
+          scale={0.9}
+        />
+        <form
+          className="grid gap-3 relative bg-white p-3 rounded-sm"
+          onSubmit={handleSubmit}
+        >
           <input
             autoFocus
             className="input"

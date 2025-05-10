@@ -61,7 +61,7 @@ const Shortcuts = () => {
         // router.push("/home");
         redirect("/home");
       } else if (keys["L"]) {
-        console.log("alt shift h");
+        console.log("alt shift l");
         keys[event.key] = false;
         // router.push("/home");
         // redirect("/home");

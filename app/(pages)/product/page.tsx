@@ -23,7 +23,7 @@ const Product = () => {
           "GET"
         );
         setOutput(o?.data);
-        // console.log(o?.data);
+        console.log(o?.data);
       }
     }
     fullTextSearch();

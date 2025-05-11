@@ -24,13 +24,7 @@ const Shortcuts = () => {
     // console.log("before");
     // console.log(keys);
     if (keys["Alt"] && keys["Shift"]) {
-      if (keys["P"] && keys["A"]) {
-        // event.preventDefault();
-        console.log("alt shift p a");
-        keys[event.key] = false;
-        // router.push("/product/add");
-        redirect("/product/add");
-      } else if (keys["P"]) {
+      if (keys["P"]) {
         console.log("alt shift p");
         keys[event.key] = false;
         // router.push("/product");

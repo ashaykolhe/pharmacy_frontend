@@ -1,22 +1,14 @@
 import React from "react";
 import {
   Menubar,
-  MenubarCheckboxItem,
   MenubarContent,
   MenubarItem,
   MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
   MenubarTrigger,
 } from "@/components/ui/menubar";
 
 import { logout } from "../utils/jwtStore";
-import Link from "next/link";
+import ShortcutToolTip from "./ShortcutToolTip";
 
 const NavbarMenu = () => {
   return (
@@ -24,65 +16,65 @@ const NavbarMenu = () => {
       <Menubar>
         <MenubarMenu>
           <MenubarTrigger>
-            <Link href="/home">Home</Link>
-            &nbsp;<MenubarShortcut>Alt Shift H</MenubarShortcut>
+            <ShortcutToolTip
+              link={"/home"}
+              shortcut={"Alt Shift H"}
+              text={"Home"}
+            />
           </MenubarTrigger>
         </MenubarMenu>
         <MenubarMenu>
           <MenubarTrigger>Dashboard</MenubarTrigger>
           <MenubarContent>
             <MenubarItem>
-              <Link href="/dashboard/god">God</Link>
-              <MenubarShortcut>Alt Shift D G</MenubarShortcut>
+              <ShortcutToolTip
+                link={"/dashboard/god"}
+                shortcut={"Alt Shift D G"}
+                text={"God"}
+              />
             </MenubarItem>
             <MenubarItem>
-              <Link href="/dashboard/admin">Admin</Link>
-              <MenubarShortcut>Alt Shift D A</MenubarShortcut>
+              <ShortcutToolTip
+                link={"/dashboard/admin"}
+                shortcut={"Alt Shift D A"}
+                text={"Admin"}
+              />
             </MenubarItem>
             <MenubarItem>
-              <Link href="/dashboard/user">User</Link>
-              <MenubarShortcut>Alt Shift D U</MenubarShortcut>
+              <ShortcutToolTip
+                link={"/dashboard/user"}
+                shortcut={"Alt Shift D U"}
+                text={"User"}
+              />
             </MenubarItem>
           </MenubarContent>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger>Employee</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>
-              <Link href="/employee">View</Link>
-              <MenubarShortcut>Alt Shift E</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              <Link href="/employee/add">Add</Link>
-              <MenubarShortcut>Alt Shift E A</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              Update
-              <MenubarShortcut>Alt Shift E U</MenubarShortcut>
-            </MenubarItem>
-          </MenubarContent>
+          <MenubarTrigger>
+            <ShortcutToolTip
+              link={"/employee"}
+              shortcut={"Alt Shift E"}
+              text={"Employee"}
+            />
+          </MenubarTrigger>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger>Product</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem>
-              <Link href="/product">View</Link>
-              <MenubarShortcut>Alt Shift P</MenubarShortcut>
-            </MenubarItem>
-            <MenubarItem>
-              <Link href="/product/add">Add</Link>
-              {/* &nbsp;<MenubarShortcut>Alt p a</MenubarShortcut> */}
-            </MenubarItem>
-            <MenubarItem>
-              Update
-              {/* <MenubarShortcut>Alt p u</MenubarShortcut> */}
-            </MenubarItem>
-          </MenubarContent>
+          <MenubarTrigger>
+            <ShortcutToolTip
+              link={"/product"}
+              shortcut={"Alt Shift P"}
+              text={"Product"}
+            />
+          </MenubarTrigger>
         </MenubarMenu>
         <MenubarMenu>
-          <MenubarTrigger className="cursor-pointer" onClick={() => logout()}>
-            Logout&nbsp;
-            <MenubarShortcut>Alt Shift L</MenubarShortcut>
+          <MenubarTrigger className="cursor-pointer">
+            <ShortcutToolTip
+              link={"/logout"}
+              shortcut={"Alt Shift L"}
+              text={"Logout"}
+              onClickFunc={() => logout()}
+            />
           </MenubarTrigger>
         </MenubarMenu>
       </Menubar>

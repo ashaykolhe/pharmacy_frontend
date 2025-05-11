@@ -2,6 +2,7 @@
 
 import { checkIfJwtValid, loginRequestInterceptor } from "@/app/utils/utils";
 import { GlowEffect } from "@/components/motion-primitives/glow-effect";
+import { Button } from "@/components/ui/button";
 import React, { FormEvent, useEffect, useState } from "react";
 
 const Login = () => {
@@ -32,8 +33,8 @@ const Login = () => {
   }, [username, password]);
 
   return (
-    <section className="grid min-h-screen place-items-center p-16">
-      <div className="relative p-4">
+    <section className="grid min-h-screen place-items-center">
+      <div className="relative p-4 w-80">
         <GlowEffect
           colors={["#FF5733", "#33FF57", "#3357FF", "#F1C40F"]}
           mode="colorShift"
@@ -62,10 +63,13 @@ const Login = () => {
             placeholder="Enter your password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button className="submit" type="submit">
+          {/* <button className="submit" type="submit">
             <span>Sign In</span>
-          </button>
-          <span className="error">{error}</span>
+          </button> */}
+          <Button variant={"ghost"} className="submit">
+            Sign In
+          </Button>
+          <div className="error">{error}</div>
         </form>
       </div>
     </section>

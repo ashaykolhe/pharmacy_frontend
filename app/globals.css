@@ -121,14 +121,14 @@
 
 @layer utilities {
   .input {
-    @apply h-10 rounded-sm  px-2 text-teal-600 placeholder:text-teal-400 focus:outline-none focus:ring focus:ring-teal-800;
+    @apply h-10 rounded-sm px-2 focus:outline-none focus:ring;
   }
 
   .submit {
-    @apply flex h-10 items-center justify-between rounded-sm bg-teal-500 px-2 text-teal-100 transition-colors duration-300 hover:bg-teal-800 focus:outline-none focus:ring focus:ring-teal-400;
+    @apply flex h-10 items-start justify-start rounded-sm px-2 transition-colors duration-300 focus:outline-none focus:ring border-black focus:border-2;
   }
 
   .error {
-    @apply flex items-center justify-between shadow-2xl text-red-600;
+    @apply flex items-center justify-center shadow-2xl text-red-600;
   }
 }
